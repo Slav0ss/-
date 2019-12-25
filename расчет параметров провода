@@ -1,5 +1,14 @@
 from math import log10
+
+wires = {"0": ("АС-500/64", 0.058, 30.6),
+         "1": ("АС-500/26", 0.058, 30), 
+         "2": ("АС-400/51", 0.073, 27.5), 
+         "3": ("АС-300/39", 0.096, 24), 
+         "4": ("АС-240/32", 0.118, 21.6)}
 standart_d_sg = {"35": 3.5, "110": 5, "150": 6.5, "220": 8, "330": 11, "500": 14, "750": 22.7}
+
+def calc_r0(r_pr, n = 1):
+  return r_pr / n
 
 def calc_x0(r_ekv, d_sg, n = 1):
   return 0.1445 * log10(d_sg*10**3 / r_ekv) + (0.0157 / n)
@@ -7,9 +16,28 @@ def calc_x0(r_ekv, d_sg, n = 1):
 def calc_b0(r_ekv, d_sg):
   return 7.58 / log10(d_sg*10**3 / r_ekv)
 
-r = float(input("Введите Rэкв: "))
-u = input("Введите Uном: ")
-d = standart_d_sg.get(u)
-x0 = calc_x0(r, d)
-b0 = calc_b0(r, d)
-print("{0:.3f} {1:.3f}".format(x0, b0))
+
+for key, value in wires.items():
+  print("{k}: {w}".format(k=key, w=value[0]))
+n_uchastkov = input("Введите число участков ЛЭП: ")
+if n_uchastkov == "":
+  n_uchastkov = 1
+else:
+  n_uchastkov = int(n_uchastkov)
+u_nom = input("Введите Uном: ")
+d_sg = standart_d_sg.get(u_nom)
+r_sum = 0
+x_sum = 0
+b_sum = 0
+for i in range(n_uchastkov):
+  wire = input("Выберите провод №{}: ".format(i+1))
+  l = float(input("Введите длину участка: "))
+  r0 = calc_r0(wires[wire][1])
+  rad_pr = wires[wire][2] / 2
+  x0 = calc_x0(rad_pr, d_sg)
+  b0 = calc_b0(rad_pr, d_sg)
+  r_sum += r0 * l
+  x_sum += x0 * l
+  b_sum += b0 * l
+print("Параметры ЛЭП:")
+print("R = {0:.3f} Ом\nX = {1:.3f} Ом\nB = {2:.3f} мкСм".format(r_sum, x_sum, b_sum))
