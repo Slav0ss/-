@@ -1,0 +1,15 @@
+from math import log10
+standart_d_sg = {"35": 3.5, "110": 5, "150": 6.5, "220": 8, "330": 11, "500": 14, "750": 22.7}
+
+def calc_x0(r_ekv, d_sg, n = 1):
+  return 0.1445 * log10(d_sg*10**3 / r_ekv) + (0.0157 / n)
+
+def calc_b0(r_ekv, d_sg):
+  return 7.58 / log10(d_sg*10**3 / r_ekv)
+
+r = float(input("Введите Rэкв: "))
+u = input("Введите Uном: ")
+d = standart_d_sg.get(u)
+x0 = calc_x0(r, d)
+b0 = calc_b0(r, d)
+print("{0:.3f} {1:.3f}".format(x0, b0))
