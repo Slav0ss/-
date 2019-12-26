@@ -40,4 +40,4 @@ for i in range(n_uchastkov):
   x_sum += x0 * l
   b_sum += b0 * l
 print("Параметры ЛЭП:")
-print("R = {0:.3f} Ом\nX = {1:.3f} Ом\nB = {2:.3f} мкСм".format(r_sum, x_sum, b_sum))
+print("R = {0:.2f} Ом\nX = {1:.2f} Ом\nB = {2:.1f} мкСм".format(r_sum, x_sum, b_sum))
